@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Miss S!</title>
+  <style>
+    body {
+      background-color: #F8C8DC; /* Baby Pink */
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+    }
+    h1 {
+      color: #D470A2; /* Wild Orchid */
+      font-size: 3em;
+      margin-top: 50px;
+    }
+    .container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .dancer {
+      width: 150px;
+      position: relative;
+      animation: dance 1s infinite alternate ease-in-out;
+    }
+    @keyframes dance {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-10px) rotate(5deg); }
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      top: -10px;
+      opacity: 0.7;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      from { transform: translateY(-10px); opacity: 1; }
+      to { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Happy Birthday, Miss S!</h1>
+    <!-- If you have an animated image of a dancing man with Andrew Garfield’s face, replace the URL below -->
+    <img class="dancer" src="https://i.imgur.com/w5Rpm9F.png" alt="Dancing Andrew Garfield">
+  </div>
+  <script>
+    function createConfetti() {
+      for (let i = 0; i < 100; i++) {
+        let confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        document.body.appendChild(confetti);
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        confetti.style.backgroundColor = ["#ff0000", "#ff8000", "#ffff00", "#00ff00", "#0000ff", "#8000ff"][Math.floor(Math.random() * 6)];
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+    createConfetti();
+    setInterval(createConfetti, 2000);
+  </script>
+</body>
+</html>
