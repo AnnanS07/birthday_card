@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Envelope Birthday Card</title>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.9.3/tsparticles.bundle.min.js"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <style>
+    /* Reset & font */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+    html, body {
+      width:100vw; height:100vh; overflow:hidden;
+      font-family: 'Shadows Into Light', cursive;
+      background: linear-gradient(135deg,#FFC0CB 0%,#FFB6C1 100%);
+      cursor: url('images/jp64_nobg.png') 32 32, auto;
+    }
+    /* Full-screen envelope overlay */
+    #envelope-screen {
+      position: fixed; inset:0;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      cursor:pointer; perspective:1000px; z-index:10;
+      background: inherit; overflow:visible;
+    }
+    #envelope-screen::before {
+      content: '';
+      position:absolute; top:0; left:0;
+      width:100%; height:50%;
+      background:#DE5D83;
+      clip-path:polygon(0 0,100% 0,50% 100%);
+      transform-origin: top center;
+      transition: transform 1s;
+      z-index:2;
+    }
+    #envelope-screen.opened::before {
+      transform: rotateX(-180deg);
+    }
+    #envelope-screen::after {
+      content: '';
+      position:absolute; inset:0;
+      pointer-events:none;
+      border:20px solid #DE5D83;
+      border-image: url('images/lace-edge.png') 40 round;
+      box-sizing:border-box;
+      z-index:3;
+    }
+    .emoji-wrapper { position:relative; z-index:4; font-size:3rem; display:flex; gap:1rem; }
+    .emoji.cake { font-size:4rem; }
+    .shake {
+      position:relative; z-index:4; margin-top:2rem;
+      font-size:1.5rem; color:#D470A2;
+      animation:shake 1s infinite;
+    }
+    @keyframes shake { 0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);} }
+    /* Main card content */
+    #main-content { display:none; text-align:center; position:relative; z-index:5; }
+    #main-content.opened {
+      display:block;
+      animation: slideIn 1s ease-out forwards;
+    }
+    @keyframes slideIn { from { transform: translateY(100vh); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    h1 { font-size:3em; margin-top:1rem; color:#D470A2; }
+    .lottie-container { margin:1.5rem auto; width:300px; height:300px; }
+    .garfield { margin:1.5rem auto; width:300px; }
+    .garfield img {
+      width:100%; border:2px solid #D470A2; border-radius:10px;
+      animation:popIn 1s ease-out infinite;
+    }
+    @keyframes popIn { 0%{transform:scale(0.9);}50%{transform:scale(1);}100%{transform:scale(0.9);} }
+  </style>
+</head>
+<body>
+  <div id="envelope-screen">
+    <div class="emoji-wrapper"><span>❤️</span><span class="cake">🎂</span><span>❤️</span></div>
+    <div class="shake">Click to Open!</div>
+  </div>
+
+  <div id="main-content">
+    <h1>🎉 Happy Birthday, Miss S! 🎉</h1>
+    <div class="lottie-container">
+      <dotlottie-player src="https://lottie.host/9a1e03f7-33d8-4f65-8670-438a3f77ae13/dS6bdIz6Og.lottie" background="transparent" speed="1" loop autoplay style="width:300px;height:300px;"></dotlottie-player>
+    </div>
+    <div class="garfield"><img src="https://i.gifer.com/2RG.gif" alt="Andrew Garfield with bouquet"></div>
+  </div>
+
+  <script>
+    const envelope = document.getElementById('envelope-screen');
+    envelope.addEventListener('click', () => {
+      envelope.classList.add('opened');
+      setTimeout(() => {
+        envelope.style.display = 'none';
+        const main = document.getElementById('main-content');
+        main.classList.add('opened');
+        tsParticles.load('tsparticles', {
+          fullScreen: { enable: true, zIndex: 1 }, fpsLimit:60,
+          interactivity:{events:{onHover:{enable:true,mode:'repulse'}},modes:{repulse:{distance:100,duration:0.4}}},
+          particles:{number:{value:30},shape:{type:'char',character:{value:['❤️','☁️'],font:'Arial',fill:true}},color:{value:['#FF5DA2','#FFFFFF','#B0E57C']},size:{value:{min:12,max:20}},move:{enable:true,speed:2,direction:'bottom',outModes:{default:'out'}}},detectRetina:true
+        });
+        setInterval(() => {
+          const c = document.createElement('div');
+          Object.assign(c.style, { position:'fixed', top:'-10px', left:Math.random()*window.innerWidth+'px', width:'8px', height:'8px', background:['#FF5DA2','#FFC0CB','#FFD700','#FF69B4'][Math.floor(Math.random()*4)], borderRadius:'50%', opacity:'0.7', zIndex:'1', transition:'transform 4s linear,opacity 4s linear' });
+          document.body.appendChild(c);
+          requestAnimationFrame(() => { c.style.transform = `translateY(${window.innerHeight}px)`; c.style.opacity = '0'; });
+          setTimeout(() => c.remove(), 4500);
+        }, 100);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
